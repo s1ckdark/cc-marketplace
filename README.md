@@ -1,11 +1,11 @@
-# Dave's Claude Marketplace
+# Dave's CC Marketplace
 
 개인용 Claude Code 플러그인 마켓플레이스
 
 ## 설치
 
 ```bash
-/install-marketplace github:s1ckdark/claude-marketplace
+claude plugin marketplace add github:s1ckdark/cc-marketplace
 ```
 
 ## 플러그인 목록
@@ -18,13 +18,13 @@
 
 마켓플레이스 등록 후:
 ```bash
-/install-plugin claude-code-rag
+claude plugin install claude-code-rag
 ```
 
 ## 구조
 
 ```
-claude-marketplace/
+cc-marketplace/
 ├── plugins/
 │   └── claude-code-rag/
 │       ├── plugin.json
