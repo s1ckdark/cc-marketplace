@@ -1,0 +1,21 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "claude-marketplace",
+  "description": "Dave's personal Claude Code plugin marketplace",
+  "owner": {
+    "name": "s1ckdark",
+    "email": "s1ckdark@github.com"
+  },
+  "plugins": [
+    {
+      "name": "claude-code-rag",
+      "description": "RAG-based knowledge management - store and retrieve work history using vector databases",
+      "version": "1.0.0",
+      "author": {
+        "name": "dave"
+      },
+      "source": "./plugins/claude-code-rag",
+      "category": "productivity"
+    }
+  ]
+}
