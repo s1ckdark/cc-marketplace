@@ -1,15 +1,16 @@
 {
-  "name": "claude-code-rag",
-  "version": "1.1.0",
-  "description": "RAG-based knowledge management for Claude Code - Store and retrieve work history, solutions, and analysis",
+  "name": "claude-crib",
+  "version": "2.0.0",
+  "description": "Plugin suite for Claude Code - Knowledge stash, codebase analysis, and more",
   "author": {
     "name": "dave",
     "email": "s1ckdark@github.com",
     "url": "https://github.com/s1ckdark"
   },
-  "repository": "https://github.com/s1ckdark/oh-my-claude-rag",
+  "repository": "https://github.com/s1ckdark/claude-crib",
   "license": "MIT",
   "keywords": [
+    "plugin-suite",
     "rag",
     "vector-db",
     "knowledge-management",
@@ -17,8 +18,8 @@
     "productivity",
     "codebase-analysis"
   ],
-  "commands": "./plugins/oh-my-claude-rag/commands",
-  "agents": "./plugins/oh-my-claude-rag/agents",
-  "hooks": "./plugins/oh-my-claude-rag/hooks/hooks.json",
-  "mcpServers": "./plugins/oh-my-claude-rag/.mcp.json"
+  "commands": "./plugins/codecrib/commands",
+  "agents": "./plugins/codecrib/agents",
+  "hooks": "./plugins/codecrib/hooks/hooks.json",
+  "mcpServers": "./plugins/codecrib/.mcp.json"
 }
