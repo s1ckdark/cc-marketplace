@@ -1,20 +1,26 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "cc-marketplace",
-  "description": "Dave's personal Claude Code plugin marketplace",
+  "name": "dave-cc-plugins",
+  "metadata": {
+    "description": "Dave's Claude Code Plugin Marketplace - AI 개발 도구와 생산성 플러그인",
+    "version": "1.0.0"
+  },
   "owner": {
     "name": "s1ckdark",
-    "email": "s1ckdark@github.com"
+    "email": "s1ckdark@github.com",
+    "url": "https://github.com/s1ckdark"
   },
   "plugins": [
     {
       "name": "claude-code-rag",
-      "description": "RAG-based knowledge management - store and retrieve work history using vector databases",
+      "source": "./plugins/claude-code-rag",
+      "description": "RAG 기반 지식 관리 시스템 - 작업 내역, 솔루션, 분석 결과를 벡터 DB에 저장하고 검색",
       "version": "1.0.0",
       "author": {
-        "name": "dave"
+        "name": "dave",
+        "url": "https://github.com/s1ckdark"
       },
-      "source": "./plugins/claude-code-rag",
+      "keywords": ["rag", "vector-db", "knowledge-management", "pinecone", "productivity"],
       "category": "productivity"
     }
   ]

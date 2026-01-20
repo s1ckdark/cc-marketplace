@@ -1,0 +1,13 @@
+{
+  "Stop": [
+    {
+      "matcher": "*",
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "Check if significant code changes were made during this session. If so, suggest running /rag-save to document the work for future reference."
+        }
+      ]
+    }
+  ]
+}
