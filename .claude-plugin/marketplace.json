@@ -1,0 +1,26 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "oh-my-claude-rag",
+  "metadata": {
+    "description": "Claude Code RAG Plugin - 벡터 DB 기반 지식 관리",
+    "version": "1.0.0"
+  },
+  "owner": {
+    "name": "s1ckdark",
+    "url": "https://github.com/s1ckdark"
+  },
+  "plugins": [
+    {
+      "name": "claude-code-rag",
+      "source": ".",
+      "description": "RAG 기반 지식 관리 시스템 - 작업 내역, 솔루션, 분석 결과를 벡터 DB에 저장하고 검색",
+      "version": "1.1.0",
+      "author": {
+        "name": "dave",
+        "url": "https://github.com/s1ckdark"
+      },
+      "keywords": ["rag", "vector-db", "knowledge-management", "pinecone", "productivity"],
+      "category": "productivity"
+    }
+  ]
+}
