@@ -24,131 +24,50 @@ arguments:
 
 Analyze project structure and generate searchable documentation for each directory.
 
-## Overview
-
-This command runs a **hybrid analysis**:
-1. **Phase 1**: Quick breadth-first scan of all directories
-2. **Phase 2**: Deep analysis of high-priority directories
-
 ## Instructions
 
-### Step 1: Initialize
+**Use the `codebase-analyzer` agent via Task tool to perform the analysis.**
 
-1. Determine root path (argument or current directory)
-2. Detect project type from config files:
-   - `package.json` → Node.js/JavaScript
-   - `pyproject.toml` / `setup.py` → Python
-   - `Cargo.toml` → Rust
-   - `go.mod` → Go
-   - `pom.xml` / `build.gradle` → Java
-3. Create output directory: `.rag-docs/structure/`
-
-### Step 2: Phase 1 - Breadth-First Scan
+### Step 1: Launch Codebase Analyzer Agent
 
 ```
-For each directory (up to max depth):
-  Skip if in ignore list:
-    - node_modules, vendor, .venv, __pycache__
-    - .git, .svn, .hg
-    - dist, build, out, target
-    - .cache, .tmp
-
-  Collect metadata:
-    - path: relative path from root
-    - name: directory name
-    - fileCount: number of files
-    - fileTypes: extensions found
-    - hasReadme: boolean
-    - hasConfig: boolean (index.ts, __init__.py, mod.rs)
-    - subdirs: list of subdirectory names
-
-  Generate quick summary (1-2 sentences based on name and contents)
-
-  Save basic entry to .rag-docs/structure/{path-slug}.md
+Use Task tool with:
+- subagent_type: "claude-code-rag:codebase-analyzer"
+- prompt: Include the following parameters:
+  - Root path: {{path}} or current directory
+  - Max depth: {{depth}} or 4
+  - Top N for deep analysis: {{top}} or 20
+  - Namespace: {{namespace}} or project directory name
 ```
 
-### Step 3: Calculate Priority Scores
+### Step 2: Agent Will Execute
 
-```
-For each scanned directory:
-  score = 0
+The codebase-analyzer agent will:
 
-  // File count (max 30)
-  score += min(30, floor(fileCount / 10) * 10)
+1. **Phase 1 - Breadth-First Scan**:
+   - Scan all directories up to max depth
+   - Skip: node_modules, .git, dist, build, __pycache__, etc.
+   - Generate quick summaries for each directory
+   - Save to `.rag-docs/structure/`
 
-  // README bonus (+20)
-  if hasReadme: score += 20
+2. **Phase 2 - Deep Analysis**:
+   - Calculate priority scores for all directories
+   - Analyze top N high-priority directories in detail
+   - Read READMEs, entry files, analyze exports/imports
+   - Update documentation with enriched content
 
-  // Import frequency (max 25)
-  importCount = grep for imports pointing to this directory
-  score += min(25, importCount * 5)
+3. **Phase 3 - RAG Indexing**:
+   - Parse generated markdown documents
+   - Upsert to Pinecone index `claude-code-rag`
+   - Use provided namespace
 
-  // Core directory bonus (+15)
-  if name in [src, lib, core, app, packages, modules]: score += 15
+### Step 3: Report Results
 
-  // Depth penalty (max -10)
-  score -= min(10, (depth - 1) * 5)
-
-Sort directories by score descending
-```
-
-### Step 4: Phase 2 - Deep Analysis
-
-```
-For top N directories (default 20):
-  1. Read README.md if exists
-  2. Read main entry file (index.ts, __init__.py, mod.rs)
-  3. Analyze exports/public API
-  4. Identify patterns:
-     - Component library?
-     - Utility functions?
-     - API routes?
-     - Data models?
-  5. Map dependencies (imports from other directories)
-  6. Generate detailed documentation
-  7. Update .rag-docs/structure/{path-slug}.md with enriched content
-```
-
-### Step 5: Index to Vector DB
-
-```
-For each generated document:
-  1. Parse frontmatter
-  2. Generate record ID: {namespace}-structure-{path-hash}
-  3. Upsert to Pinecone:
-     - index: claude-code-rag
-     - namespace: provided or project directory name
-```
-
-### Step 6: Report Summary
-
-```
-📊 Codebase Analysis Complete
-
-Project: {project-name} ({project-type})
-Root: {root-path}
-
-Phase 1 (Quick Scan):
-  ├─ Directories scanned: 45
-  ├─ Files discovered: 312
-  └─ Basic entries created: 45
-
-Phase 2 (Deep Analysis):
-  ├─ High-priority directories: 20
-  ├─ Detailed docs generated: 20
-  └─ Top directories:
-     1. src/components (score: 85)
-     2. src/lib (score: 75)
-     3. src/api (score: 70)
-     ...
-
-RAG Indexing:
-  ├─ Documents indexed: 45
-  ├─ Namespace: {namespace}
-  └─ Index: claude-code-rag
-
-Output: .rag-docs/structure/
-```
+After agent completes, display summary:
+- Directories scanned
+- Documents generated
+- Top priority directories with scores
+- RAG indexing status
 
 ## Example Usage
 
@@ -163,49 +82,18 @@ Output: .rag-docs/structure/
 /rag-analyze --top 30 --namespace my-monorepo
 ```
 
-## Output Format
+## Example Task Prompt
 
-Each generated document follows this structure:
-
-```markdown
----
-type: codebase-structure
-date: 2024-01-20
-tags: [component, react, ui]
-path: src/components
-score: 85
-project: my-app
-title: Components - Reusable React UI Components
----
-
-# src/components
-
-## Purpose
-[1-2 sentence summary]
-
-## Key Files
-- index.ts - Barrel exports
-- Button/Button.tsx - Primary button component
-
-## Structure
-- atoms/ - Basic building blocks
-- molecules/ - Composite components
-
-## Dependencies
-- ../hooks - Custom React hooks
-- ../styles - Shared styles
-
-## Dependents
-- ../pages - All page components
-- ../app - Main application
-
-## Patterns
-- Atomic design structure
-- Each component has co-located tests
 ```
+Analyze the codebase at [path] with the following settings:
+- Maximum depth: [depth]
+- Top directories for deep analysis: [top]
+- Namespace for RAG indexing: [namespace]
 
-## Notes
+Execute the hybrid analysis:
+1. Phase 1: Quick breadth-first scan of all directories
+2. Phase 2: Deep analysis of top priority directories
+3. Phase 3: Index all generated documents to Pinecone
 
-- First run may take 1-2 minutes for large codebases
-- Re-running updates existing entries (incremental)
-- Use `--namespace` for monorepos to separate projects
+Save outputs to .rag-docs/structure/ and report the summary.
+```

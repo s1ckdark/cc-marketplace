@@ -26,62 +26,111 @@ Save the current work session as a structured document to the vector database.
 
 ## Instructions
 
-1. **Analyze the current conversation** to understand:
-   - What problem was being solved
-   - What solution was implemented
-   - What files were modified
-   - Key learnings and insights
+**Use the `documenter` agent via Task tool to generate the document.**
 
-2. **Determine work type** (if not provided):
+### Step 1: Launch Documenter Agent
+
+```
+Use Task tool with:
+- subagent_type: "claude-code-rag:documenter"
+- prompt: Include the following context:
+  - Work type: {{type}} or auto-detect from conversation
+  - Title: {{title}} or auto-generate
+  - Tags: {{tags}} or auto-extract
+  - Namespace: {{namespace}} or project directory name
+  - Full conversation context for analysis
+```
+
+### Step 2: Agent Will Execute
+
+The documenter agent will:
+
+1. **Analyze Conversation**:
+   - Identify problem being solved
+   - Extract solution implemented
+   - List files modified
+   - Capture key learnings
+
+2. **Classify Work Type** (if not provided):
    - `bugfix`: Bug fixes, error resolutions
    - `feature`: New functionality added
-   - `refactor`: Code restructuring without behavior change
+   - `refactor`: Code restructuring
    - `analysis`: Code exploration, architecture review
 
-3. **Generate structured document** using the documenter agent:
-   ```
-   Use the documenter agent to create a structured markdown document
-   based on the conversation context and work type.
-   ```
+3. **Generate Structured Document**:
+   - Use appropriate template from `/templates/`
+   - Include frontmatter metadata
+   - Format for optimal RAG retrieval
 
-4. **Extract metadata**:
-   - Auto-detect tags from code patterns, file types, frameworks
+4. **Extract Metadata**:
+   - Auto-detect tags from code patterns
    - List all modified files
-   - Generate relevant keywords
+   - Generate searchable keywords
 
-5. **Save to vector database**:
-   - Use Pinecone MCP `upsert-records` tool
-   - Index: `claude-code-rag`
-   - Namespace: Use provided namespace or project directory name
-   - Record format:
-     ```json
-     {
-       "id": "{{namespace}}-{{timestamp}}-{{hash}}",
-       "content": "Full markdown document text",
-       "type": "{{type}}",
-       "title": "{{title}}",
-       "project": "{{namespace}}",
-       "date": "{{YYYY-MM-DD}}",
-       "tags": "{{comma-separated-tags}}",
-       "files": "{{comma-separated-files}}"
-     }
-     ```
+### Step 3: Save to Vector Database
 
-6. **Confirm save** to user with:
-   - Document title
-   - Type and tags
-   - Files referenced
-   - Record ID for future reference
+After agent generates document, save to Pinecone:
+
+```
+Use Pinecone MCP upsert-records tool:
+- index: claude-code-rag
+- namespace: {{namespace}} or project name
+- record:
+  {
+    "id": "{{namespace}}-{{timestamp}}-{{hash}}",
+    "content": "Full markdown document text",
+    "type": "{{type}}",
+    "title": "{{title}}",
+    "project": "{{namespace}}",
+    "date": "{{YYYY-MM-DD}}",
+    "tags": "{{comma-separated-tags}}",
+    "files": "{{comma-separated-files}}"
+  }
+```
+
+### Step 4: Confirm to User
+
+Display:
+- Document title
+- Type and tags
+- Files referenced
+- Record ID for future reference
 
 ## Example Usage
 
-```
+```bash
+# Auto-detect everything from conversation
+/rag-save
+
+# Specify type and tags
 /rag-save --type bugfix --tags "auth,session" --title "Session timeout fix"
+
+# Save to specific namespace
+/rag-save --namespace my-project --type feature
+```
+
+## Example Task Prompt
+
+```
+Analyze the current conversation and generate a structured RAG document:
+
+Settings:
+- Work type: [type] (or auto-detect)
+- Title: [title] (or auto-generate)
+- Tags: [tags] (or auto-extract)
+- Namespace: [namespace]
+
+Tasks:
+1. Analyze conversation to understand what was accomplished
+2. Classify work type if not provided
+3. Generate structured markdown document using appropriate template
+4. Extract metadata (files modified, tags, keywords)
+5. Return the complete document for RAG indexing
 ```
 
 ## Auto-detection Hints
 
-- If conversation mentions "error", "bug", "fix" → likely `bugfix`
-- If conversation mentions "add", "implement", "new feature" → likely `feature`
-- If conversation mentions "refactor", "clean", "restructure" → likely `refactor`
-- If conversation asks "how", "why", "explain" → likely `analysis`
+- Conversation mentions "error", "bug", "fix" → `bugfix`
+- Conversation mentions "add", "implement", "new feature" → `feature`
+- Conversation mentions "refactor", "clean", "restructure" → `refactor`
+- Conversation asks "how", "why", "explain" → `analysis`
