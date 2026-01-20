@@ -17,6 +17,8 @@
     "productivity",
     "codebase-analysis"
   ],
+  "commands": "../commands",
+  "agents": "../agents",
   "hooks": "../hooks/hooks.json",
   "mcpServers": "../.mcp.json"
 }
