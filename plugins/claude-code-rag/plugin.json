@@ -1,6 +1,6 @@
 {
   "name": "claude-code-rag",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "RAG-based knowledge management for Claude Code - Store and retrieve work history, solutions, and analysis",
   "author": {
     "name": "dave",
@@ -11,9 +11,11 @@
     "vector-db",
     "knowledge-management",
     "pinecone",
-    "productivity"
+    "productivity",
+    "codebase-analysis"
   ],
   "commands": "./commands",
+  "agents": "./agents",
   "hooks": "./hooks/hooks.json",
   "mcpServers": "./.mcp.json"
 }
