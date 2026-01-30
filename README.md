@@ -22,14 +22,14 @@ Think of it as your toolbox, your cheat codes, your secret sauce — all the stu
 
 ## The Lineup
 
-### 📦 [codecrib](./plugins/codecrib/)
+### 📦 [code-crib](./plugins/code-crib/)
 > *Your knowledge stash for Claude Code*
 
 RAG-powered memory that never forgets. Stash your wins, grab past solutions, never solve the same bug twice.
 
 ```bash
-codecrib:stash --type bugfix --title "That auth bug that took 3 hours"
-codecrib:grab "session timeout"  # boom, instant recall with related docs
+code-crib:stash --type bugfix --title "That auth bug that took 3 hours"
+code-crib:grab "session timeout"  # boom, instant recall with related docs
 ```
 
 **Core Features:**
@@ -40,17 +40,17 @@ codecrib:grab "session timeout"  # boom, instant recall with related docs
 - 📊 **Codebase Analysis** — Scope out any codebase structure
 - 🔀 **Collection Modes** — Project isolation or cross-project shared search
 
-**Skills (codecrib: prefix):**
+**Skills (code-crib: prefix):**
 | Skill | What it does |
 |-------|--------------|
-| `codecrib:setup` | Interactive setup wizard |
-| `codecrib:update` | Update plugin to latest version |
-| `codecrib:stash` | Stash your work to the knowledge crib |
-| `codecrib:grab` | Grab docs from your stash |
-| `codecrib:rack` | Rack up local docs into the stash |
-| `codecrib:list` | Check what's in your stash |
-| `codecrib:remove` | Remove docs from your stash |
-| `codecrib:analyze` | Analyze codebase structure |
+| `code-crib:setup` | Interactive setup wizard |
+| `code-crib:update` | Update plugin to latest version |
+| `code-crib:stash` | Stash your work to the knowledge crib |
+| `code-crib:grab` | Grab docs from your stash |
+| `code-crib:rack` | Rack up local docs into the stash |
+| `code-crib:list` | Check what's in your stash |
+| `code-crib:remove` | Remove docs from your stash |
+| `code-crib:analyze` | Analyze codebase structure |
 
 **Agents:**
 - `documenter` — Analyzes sessions, generates structured docs with smart tagging
@@ -60,18 +60,18 @@ codecrib:grab "session timeout"  # boom, instant recall with related docs
 
 | Mode | Collection Name | Use Case |
 |------|-----------------|----------|
-| `project` | `codecrib-{project}` | Isolated per project (default) |
-| `shared` | `codecrib` | Cross-project search enabled |
+| `project` | `code-crib-{project}` | Isolated per project (default) |
+| `shared` | `code-crib` | Cross-project search enabled |
 
 ```bash
 # Project mode (default) - isolated search
-codecrib:grab "auth bug"
+code-crib:grab "auth bug"
 
 # Shared mode - search across all projects
-codecrib:grab "auth bug" --project other-app
+code-crib:grab "auth bug" --project other-app
 ```
 
-Configure in `plugins/codecrib/codecrib.local.md`:
+Configure in `plugins/code-crib/code-crib.local.md`:
 ```yaml
 collection_mode: project  # or "shared"
 ```
@@ -85,17 +85,17 @@ collection_mode: project  # or "shared"
 /plugin marketplace add s1ckdark/claude-crib
 
 # Install the plugin
-/plugin install codecrib@claude-crib --scope project
+/plugin install code-crib@claude-crib --scope project
 
 # Run setup wizard
-codecrib:setup
+code-crib:setup
 ```
 
 The setup wizard will guide you through:
 1. **Vector DB** — Chroma (Docker/Local) or Pinecone (Cloud)
 2. **Collection Mode** — Project isolation or shared search
 
-Each project can have different settings stored in `codecrib.local.md`.
+Each project can have different settings stored in `code-crib.local.md`.
 
 ### Manual Setup (Alternative)
 
@@ -116,7 +116,7 @@ If you prefer manual configuration:
 
 #### Option B: Chroma (Local)
 ```bash
-# 1. Enable in plugins/codecrib/.mcp.json:
+# 1. Enable in plugins/code-crib/.mcp.json:
 {
   "mcpServers": {
     "chroma": {
@@ -135,7 +135,7 @@ pip install chromadb
 chroma run --host localhost --port 8000
 ```
 
-See [codecrib README](./plugins/codecrib/README.md) for more details.
+See [code-crib README](./plugins/code-crib/README.md) for more details.
 
 ---
 
@@ -171,7 +171,7 @@ See [codecrib README](./plugins/codecrib/README.md) for more details.
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
 │  🔍 Future Sessions                                         │
-│  codecrib:grab "auth timeout" → Instant recall + related    │
+│  code-crib:grab "auth timeout" → Instant recall + related    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -209,18 +209,18 @@ This is the fix.
 
 | 모드 | 컬렉션 이름 | 용도 |
 |------|------------|------|
-| `project` | `codecrib-{프로젝트}` | 프로젝트별 격리 (기본값) |
-| `shared` | `codecrib` | 크로스 프로젝트 검색 |
+| `project` | `code-crib-{프로젝트}` | 프로젝트별 격리 (기본값) |
+| `shared` | `code-crib` | 크로스 프로젝트 검색 |
 
 ```bash
 # Project 모드 (기본) - 격리된 검색
-codecrib:grab "auth bug"
+code-crib:grab "auth bug"
 
 # Shared 모드 - 다른 프로젝트 검색
-codecrib:grab "auth bug" --project other-app
+code-crib:grab "auth bug" --project other-app
 ```
 
-설정 파일: `plugins/codecrib/codecrib.local.md`
+설정 파일: `plugins/code-crib/code-crib.local.md`
 
 ### 빠른 시작
 
@@ -229,17 +229,17 @@ codecrib:grab "auth bug" --project other-app
 /plugin marketplace add s1ckdark/claude-crib
 
 # 플러그인 설치
-/plugin install codecrib@claude-crib --scope project
+/plugin install code-crib@claude-crib --scope project
 
 # 설정 마법사 실행
-codecrib:setup
+code-crib:setup
 ```
 
 설정 마법사가 안내합니다:
 1. **Vector DB** — Chroma (Docker/로컬) 또는 Pinecone (클라우드)
 2. **Collection 모드** — 프로젝트 격리 또는 공유 검색
 
-각 프로젝트마다 다른 설정 가능 (`codecrib.local.md`).
+각 프로젝트마다 다른 설정 가능 (`code-crib.local.md`).
 
 ### 수동 설정 (대안)
 
@@ -260,7 +260,7 @@ codecrib:setup
 
 #### 옵션 B: Chroma (로컬)
 ```bash
-# 1. plugins/codecrib/.mcp.json에서 활성화:
+# 1. plugins/code-crib/.mcp.json에서 활성화:
 {
   "mcpServers": {
     "chroma": {
@@ -279,7 +279,7 @@ pip install chromadb
 chroma run --host localhost --port 8000
 ```
 
-자세한 설정은 [codecrib README](./plugins/codecrib/README.md)를 참조하세요.
+자세한 설정은 [code-crib README](./plugins/code-crib/README.md)를 참조하세요.
 
 ---
 
@@ -292,11 +292,11 @@ claude-crib/
 ├── .rag-docs/
 │   └── structure/           # Codebase structure docs
 ├── plugins/
-│   └── codecrib/
+│   └── code-crib/
 │       ├── .claude-plugin/
 │       │   └── plugin.json  # Plugin manifest
 │       ├── .mcp.json        # MCP servers (Chroma)
-│       ├── codecrib.local.md # Collection mode config
+│       ├── code-crib.local.md # Collection mode config
 │       ├── agents/          # documenter, codebase-analyzer
 │       ├── skills/          # 8 skills (setup, update, stash, grab, rack, list, remove, analyze)
 │       ├── hooks/           # auto-document on Stop
