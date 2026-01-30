@@ -28,8 +28,8 @@ Think of it as your toolbox, your cheat codes, your secret sauce — all the stu
 RAG-powered memory that never forgets. Stash your wins, grab past solutions, never solve the same bug twice.
 
 ```bash
-/stash --type bugfix --title "That auth bug that took 3 hours"
-/grab "session timeout"  # boom, instant recall with related docs
+codecrib:stash --type bugfix --title "That auth bug that took 3 hours"
+codecrib:grab "session timeout"  # boom, instant recall with related docs
 ```
 
 **Core Features:**
@@ -40,17 +40,17 @@ RAG-powered memory that never forgets. Stash your wins, grab past solutions, nev
 - 📊 **Codebase Analysis** — Scope out any codebase structure
 - 🔀 **Collection Modes** — Project isolation or cross-project shared search
 
-**Commands (Normal / Slang):**
-| Command | Slang | What it does |
-|---------|-------|--------------|
-| `/setup` | — | Interactive setup wizard |
-| `/update` | — | Update plugin to latest version |
-| `/save` | `/stash` | Stash your work to the knowledge crib |
-| `/search` | `/grab` | Grab docs from your stash |
-| `/index` | `/rack` | Rack up local docs into the stash |
-| `/analyze` | `/scope` | Scope out the codebase |
-| `/remove` | `/dump` | Dump docs from your stash |
-| `/list` | `/check` | Check what's in your stash |
+**Skills (codecrib: prefix):**
+| Skill | What it does |
+|-------|--------------|
+| `codecrib:setup` | Interactive setup wizard |
+| `codecrib:update` | Update plugin to latest version |
+| `codecrib:stash` | Stash your work to the knowledge crib |
+| `codecrib:grab` | Grab docs from your stash |
+| `codecrib:rack` | Rack up local docs into the stash |
+| `codecrib:list` | Check what's in your stash |
+| `codecrib:remove` | Remove docs from your stash |
+| `codecrib:analyze` | Analyze codebase structure |
 
 **Agents:**
 - `documenter` — Analyzes sessions, generates structured docs with smart tagging
@@ -65,10 +65,10 @@ RAG-powered memory that never forgets. Stash your wins, grab past solutions, nev
 
 ```bash
 # Project mode (default) - isolated search
-/grab "auth bug"
+codecrib:grab "auth bug"
 
 # Shared mode - search across all projects
-/grab "auth bug" --project other-app
+codecrib:grab "auth bug" --project other-app
 ```
 
 Configure in `plugins/codecrib/codecrib.local.md`:
@@ -88,7 +88,7 @@ collection_mode: project  # or "shared"
 /plugin install codecrib@claude-crib --scope project
 
 # Run setup wizard
-/setup
+codecrib:setup
 ```
 
 The setup wizard will guide you through:
@@ -171,7 +171,7 @@ See [codecrib README](./plugins/codecrib/README.md) for more details.
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
 │  🔍 Future Sessions                                         │
-│  /grab "auth timeout" → Instant recall + related solutions  │
+│  codecrib:grab "auth timeout" → Instant recall + related    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -214,10 +214,10 @@ This is the fix.
 
 ```bash
 # Project 모드 (기본) - 격리된 검색
-/grab "auth bug"
+codecrib:grab "auth bug"
 
 # Shared 모드 - 다른 프로젝트 검색
-/grab "auth bug" --project other-app
+codecrib:grab "auth bug" --project other-app
 ```
 
 설정 파일: `plugins/codecrib/codecrib.local.md`
@@ -232,7 +232,7 @@ This is the fix.
 /plugin install codecrib@claude-crib --scope project
 
 # 설정 마법사 실행
-/setup
+codecrib:setup
 ```
 
 설정 마법사가 안내합니다:
@@ -290,16 +290,15 @@ claude-crib/
 ├── .claude-plugin/
 │   └── plugin.json          # Bundle manifest (v2.0.0)
 ├── .rag-docs/
-│   └── structure/           # Codebase structure docs (25 files)
+│   └── structure/           # Codebase structure docs
 ├── plugins/
 │   └── codecrib/
 │       ├── .claude-plugin/
 │       │   └── plugin.json  # Plugin manifest
 │       ├── .mcp.json        # MCP servers (Chroma)
 │       ├── codecrib.local.md # Collection mode config
-│       ├── commands/        # 12 commands (6 pairs)
 │       ├── agents/          # documenter, codebase-analyzer
-│       ├── skills/          # save, search, index, analyze
+│       ├── skills/          # 8 skills (setup, update, stash, grab, rack, list, remove, analyze)
 │       ├── hooks/           # auto-document on Stop
 │       └── templates/       # bugfix, feature, refactor, analysis
 └── README.md
