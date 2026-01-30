@@ -1,20 +1,29 @@
 ---
 name: update
-description: Update codecrib plugin to the latest version from GitHub
-arguments: []
+description: Update codecrib plugin to the latest version from GitHub. Use when user wants to update, upgrade, or get the latest version of codecrib.
 ---
 
 # Update CodeCrib
 
 Update the plugin to the latest version from GitHub.
 
+## Usage
+
+```
+/update
+```
+
 ## Instructions
 
 ### Step 1: Get Plugin Directory
 
-Find the codecrib plugin installation path:
-- Check if running from marketplace install or local development
-- Use `${CLAUDE_PLUGIN_ROOT}` if available
+The plugin directory is available via `${CLAUDE_PLUGIN_ROOT}`.
+
+If not available, locate it by:
+```bash
+# Find the codecrib plugin directory
+# Usually at ~/.claude/plugins/claude-crib or development location
+```
 
 ### Step 2: Fetch Latest Changes
 
@@ -31,7 +40,7 @@ git log HEAD..origin/main --oneline
 
 **If no updates:**
 ```
-✅ codecrib is already up to date!
+codecrib is already up to date!
 ```
 
 **If updates available:**
@@ -47,7 +56,7 @@ git pull origin main
 
 **Success:**
 ```
-✅ codecrib updated successfully!
+codecrib updated successfully!
 
 Changes:
 - <commit 1>
@@ -59,19 +68,13 @@ Restart Claude Code to apply changes.
 
 **Failure:**
 ```
-❌ Update failed
+Update failed
 
 Error: <error message>
 
 Try manual update:
   cd <plugin-directory>
   git pull origin main
-```
-
-## Example Usage
-
-```
-/update
 ```
 
 ## Notes
