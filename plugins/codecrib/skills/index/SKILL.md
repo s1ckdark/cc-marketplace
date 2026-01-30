@@ -12,54 +12,162 @@ Rack up your local docs into the vector database.
 ```
 /index                   # or /rack
 /rack --path ./docs/knowledge
-/index --namespace my-project --force
+/index --force           # Re-index all documents
 ```
 
 ## Parameters
 
 - `path`: Path to directory containing markdown files (default .rag-docs/)
-- `namespace`: Project namespace for all indexed documents
-- `force`: Re-index existing documents
+- `force`: Re-index existing documents (overwrite)
 
 ## Instructions
 
-1. **Locate documents**:
-   - Default path: `.rag-docs/` in current project
-   - Scan for all `.md` files recursively
-   - Report total files found
+### Step 1: Determine Collection Name
 
-2. **Parse each document**:
-   - Extract YAML frontmatter for metadata
-   - Expected frontmatter:
-     ```yaml
-     ---
-     type: bugfix | feature | refactor | analysis
-     date: YYYY-MM-DD
-     tags: [tag1, tag2]
-     files: [file1.ts, file2.ts]
-     title: Document Title
-     ---
-     ```
+Read `codecrib.local.md` in the plugin directory to get configuration:
 
-3. **Generate record IDs**: `namespace-date-filename-hash`
+```yaml
+collection_mode: project | shared
+project_name: (optional, defaults to current directory name)
+```
 
-4. **Batch upsert to Pinecone**:
-   - Process in batches of 10-20 documents
-   - Index: codecrib
-   - Namespace: provided or derived from project
+**Collection Name Logic**:
+- **project mode**: `codecrib-{project-name}`
+  - Example: Working in `claude-crib` → collection: `codecrib-claude-crib`
+- **shared mode**: `codecrib`
+  - All documents get `project` metadata field
 
-5. **Report progress**:
-   ```
-   Indexing: 15/45 documents...
-   Complete: 40 indexed, 5 skipped
-   ```
+**Get Project Name**:
+```bash
+# If project_name not set in config:
+basename $(pwd)  # e.g., "claude-crib"
+```
+
+### Step 2: Determine Vector DB Backend
+
+Read `codecrib.local.md` to get `vector_db` setting:
+- `chroma-docker` or `chroma-local` → Use Chroma MCP tools
+- `pinecone` → Use Pinecone MCP tools
+
+### Step 3: Ensure Collection/Index Exists
+
+**For Chroma** (vector_db: chroma-docker or chroma-local):
+```
+1. List collections with chroma_list_collections
+2. If collection doesn't exist, create with chroma_create_collection:
+   - collection_name: determined from Step 1
+   - metadata: { "description": "CodeCrib knowledge base", "project": project_name }
+```
+
+**For Pinecone** (vector_db: pinecone):
+```
+1. Check if index exists using describe-index
+2. If not, guide user to create index via Pinecone console
+   - Dimension: 1536 (for OpenAI embeddings)
+   - Metric: cosine
+```
+
+### Step 4: Locate Documents
+
+- Default path: `.rag-docs/` in current project
+- Scan for all `.md` files recursively
+- Report total files found
+
+### Step 5: Parse Each Document
+
+Extract YAML frontmatter for metadata:
+```yaml
+---
+type: codebase-structure | bugfix | feature | refactor | analysis
+date: YYYY-MM-DD
+tags: [tag1, tag2]
+path: directory/path/
+title: Document Title
+priority_score: 0-100
+---
+```
+
+### Step 6: Generate Record IDs
+
+Format: `{project}-{path-slug}-{hash}`
+
+Example: `claude-crib-plugins-codecrib-abc123`
+
+### Step 7: Add Project Metadata
+
+**Always add to every document**:
+```json
+{
+  "project": "claude-crib",
+  "type": "...",
+  "date": "...",
+  "tags": "...",
+  "path": "...",
+  "title": "...",
+  "priority_score": "..."
+}
+```
+
+This ensures documents work in both modes:
+- **project mode**: Isolated by collection name
+- **shared mode**: Filterable by `project` field
+
+### Step 8: Batch Upsert
+
+**For Chroma** (vector_db: chroma-docker or chroma-local):
+```
+Use chroma_add_documents with:
+- collection_name: determined from Step 1
+- documents: [document contents]
+- ids: [generated IDs]
+- metadatas: [metadata objects with project field]
+
+Process in batches of 10 documents.
+```
+
+**For Pinecone** (vector_db: pinecone):
+```
+Use upsert-records with:
+- index: codecrib
+- namespace: project name (from Step 1)
+- records: [{ id, content, metadata }]
+
+Process in batches of 10-20 documents.
+```
+
+### Step 9: Report Progress
+
+```
+Indexing to collection: codecrib-claude-crib
+Mode: project
+
+Indexing: 15/25 documents...
+✓ Indexed: root.md
+✓ Indexed: plugins-codecrib.md
+...
+
+Complete: 25 indexed, 0 skipped
+Collection: codecrib-claude-crib (25 documents)
+```
 
 ## Directory Structure Expected
 
 ```
 .rag-docs/
-├── 2024-01-15-session-timeout-fix.md
-├── 2024-01-16-user-auth-feature.md
-└── archived/
-    └── older-document.md
+├── structure/
+│   ├── root.md
+│   ├── plugins-codecrib.md
+│   └── ...
+└── sessions/
+    ├── 2024-01-15-session-timeout-fix.md
+    └── ...
 ```
+
+## Mode Comparison
+
+| Aspect | Project Mode | Shared Mode |
+|--------|--------------|-------------|
+| Collection | `codecrib-{project}` | `codecrib` |
+| Isolation | Complete | Via metadata |
+| Cross-search | No | Yes |
+| Use case | Independent work | Multi-project |

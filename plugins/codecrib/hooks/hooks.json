@@ -5,7 +5,7 @@
       "hooks": [
         {
           "type": "prompt",
-          "prompt": "Check if significant code changes were made during this session. If so, suggest running /rag-save to document the work for future reference."
+          "prompt": "Analyze this session for documentation-worthy work and auto-save if significant:\n\n## Significance Criteria (check any):\n- Code files were modified (Edit/Write tool used)\n- Bug was diagnosed and fixed\n- New feature was implemented\n- Architecture decision was made or documented\n\n## Auto-Save Rules:\n\n**IF significant work detected:**\n1. Automatically invoke the /stash command (or /save)\n2. Let the documenter agent generate the document\n3. Report to user: 'Session auto-documented: [title]'\n\n**IF no significant work (skip silently):**\n- Only file reads occurred\n- Only questions/answers without code changes\n- Only exploration/analysis without conclusions\n\n## Threshold Examples:\n| Session Activity | Action |\n|------------------|--------|\n| Fixed a bug with code edit | AUTO-SAVE |\n| Implemented new feature | AUTO-SAVE |\n| Refactored code structure | AUTO-SAVE |\n| Just read files for context | SKIP |\n| Asked questions, got explanations | SKIP |\n| Explored codebase without changes | SKIP |\n\nBe intelligent: if the user explicitly said 'fixed', 'solved', 'implemented', 'completed' - that's significant work worth documenting."
         }
       ]
     }

@@ -22,6 +22,10 @@ arguments:
     description: Filter by tags (comma-separated)
     required: false
     type: string
+  - name: project
+    description: Filter by project name (shared mode only)
+    required: false
+    type: string
 ---
 
 # Search Command
@@ -62,7 +66,42 @@ Grab relevant docs from your knowledge stash.
    ---
    ```
 
-5. **Provide actionable insights**:
+5. **Find related documents** (for top 3 results):
+
+   For each of the top 3 search results, find related documents:
+
+   a. Extract tags from the result document
+   b. Query Pinecone for documents sharing 2+ tags with this result
+   c. Exclude documents already in main results
+   d. Take top 2 most similar by score
+   e. Append to result display
+
+   ```markdown
+   ### 1. {{title}} ({{type}}, {{date}})
+   **Tags**: {{tags}}
+   **Summary**: {{first 200 chars}}
+
+     📎 **Related**:
+     - {{related1_title}} ({{related1_type}}) - shares: {{shared_tags}}
+     - {{related2_title}} ({{related2_type}}) - shares: {{shared_tags}}
+   ```
+
+   **Related Document Query Logic**:
+   ```
+   For each top result (max 3):
+     1. Get tags array from result metadata
+     2. Search with filter: tags has ANY of [result_tags]
+     3. Filter out: current result ID, other main results
+     4. Sort by: number of shared tags DESC, then similarity score DESC
+     5. Take top 2
+   ```
+
+   **Skip related search if**:
+   - Result has fewer than 2 tags
+   - User specified --no-related flag
+   - Total results < 3 (focus on main results)
+
+6. **Provide actionable insights**:
    - Highlight how past solutions might apply to current problem
    - Note any differences in context that might affect applicability
    - Suggest which document to explore further

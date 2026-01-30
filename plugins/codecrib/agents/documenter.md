@@ -62,11 +62,41 @@ For **analysis**:
 - Findings: What was discovered?
 - Implications: What does it mean?
 
-### Step 3: Extract Metadata
+### Step 3: Extract Metadata (Enhanced Auto-Tagging)
 
+Generate rich, consistent tags automatically using these guidelines:
+
+#### Tag Categories
+Generate 2-3 tags per category:
+
+| Category | Examples | Detection Hints |
+|----------|----------|-----------------|
+| domain | auth, payment, notification, database | File paths, function names |
+| tech | react, postgresql, redis, typescript | Import statements, config files |
+| pattern | middleware, hooks, factory, singleton | Code structure, naming conventions |
+| issue | race-condition, memory-leak, timeout | Error messages, symptoms |
+
+#### Tag Normalization Rules
+- All lowercase, kebab-case: `user-authentication` not `UserAuthentication`
+- Expand common abbreviations: `json-web-token` not `jwt`, `application-programming-interface` not `api`
+- Use singular form: `middleware` not `middlewares`
+- Framework-specific prefixes: `react-hooks` not just `hooks`
+
+#### Minimum Tag Requirements by Type
+- **Bugfix**: 1 issue + 1 tech + 1 domain (min 3 tags)
+- **Feature**: 1 domain + 2 tech (min 3 tags)
+- **Refactor**: 1 pattern + 1 domain (min 2 tags)
+- **Analysis**: 2 domain tags (min 2 tags)
+
+#### Context-Based Tag Inference
+- File path `/auth/` → add `authentication` tag
+- Error `TypeError` → add `javascript` or `typescript` tag
+- Import `from 'react'` → add `react` tag
+- Directory `middleware/` → add `middleware` tag
+
+#### Also Extract
 - **Files**: List all files mentioned or modified
-- **Tags**: Technical concepts, frameworks, patterns used
-- **Keywords**: Important terms for search
+- **Keywords**: Important terms for search (beyond tags)
 
 ### Step 4: Generate Document
 
