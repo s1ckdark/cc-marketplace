@@ -19,6 +19,7 @@
     "codebase-analysis"
   ],
   "commands": "./plugins/codecrib/commands",
+  "skills": "./plugins/codecrib/skills",
   "agents": "./plugins/codecrib/agents",
   "hooks": "./plugins/codecrib/hooks/hooks.json",
   "mcpServers": "./plugins/codecrib/.mcp.json"
