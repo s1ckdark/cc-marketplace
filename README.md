@@ -44,6 +44,7 @@ RAG-powered memory that never forgets. Stash your wins, grab past solutions, nev
 | Command | Slang | What it does |
 |---------|-------|--------------|
 | `/setup` | — | Interactive setup wizard |
+| `/update` | — | Update plugin to latest version |
 | `/save` | `/stash` | Stash your work to the knowledge crib |
 | `/search` | `/grab` | Grab docs from your stash |
 | `/index` | `/rack` | Rack up local docs into the stash |
