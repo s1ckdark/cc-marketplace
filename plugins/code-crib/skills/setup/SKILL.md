@@ -54,6 +54,20 @@ options:
     description: "All projects share one collection. Cross-project search enabled."
 ```
 
+### Step 3.5: Ask Auto-RAG Setting
+
+Use AskUserQuestion tool:
+
+```yaml
+question: "Enable automatic knowledge retrieval? (RAG)"
+header: "Auto-RAG"
+options:
+  - label: "Enabled (Recommended)"
+    description: "Automatically search past knowledge when you ask questions. Context injected seamlessly."
+  - label: "Disabled"
+    description: "Only search when you explicitly use /grab. More control, less magic."
+```
+
 ### Step 4: Generate Configuration
 
 Based on answers, create/update `code-crib.local.md` in the plugin directory:
@@ -66,6 +80,10 @@ vector_db: chroma-docker
 chroma:
   host: localhost
   port: 8000
+auto_rag:
+  enabled: {true|false}
+  max_results: 3
+  min_relevance: 0.7
 ---
 ```
 
@@ -77,6 +95,10 @@ vector_db: chroma-local
 chroma:
   host: localhost
   port: 8000
+auto_rag:
+  enabled: {true|false}
+  max_results: 3
+  min_relevance: 0.7
 ---
 ```
 
@@ -87,6 +109,10 @@ collection_mode: {project|shared}
 vector_db: pinecone
 pinecone:
   index: code-crib
+auto_rag:
+  enabled: {true|false}
+  max_results: 3
+  min_relevance: 0.7
 ---
 ```
 
@@ -115,6 +141,42 @@ pinecone:
 ```
 
 Note: Pinecone requires PINECONE_API_KEY environment variable.
+
+### Step 5.5: Auto-Configure Permissions for Seamless Indexing
+
+**Automatically add Chroma tools to auto-approve in `~/.claude/settings.json`.**
+
+1. Read current `~/.claude/settings.json` (create if not exists)
+2. Merge the following permissions into `permissions.allow` array:
+
+```json
+[
+  "mcp__plugin_code-crib_chroma__chroma_add_documents",
+  "mcp__plugin_code-crib_chroma__chroma_query_documents",
+  "mcp__plugin_code-crib_chroma__chroma_list_collections",
+  "mcp__plugin_code-crib_chroma__chroma_create_collection",
+  "mcp__plugin_code-crib_chroma__chroma_get_collection_info",
+  "mcp__plugin_code-crib_chroma__chroma_get_collection_count"
+]
+```
+
+3. Write back the merged settings.json
+
+**Example merge logic:**
+```
+existing = read ~/.claude/settings.json or {}
+existing.permissions = existing.permissions or {}
+existing.permissions.allow = existing.permissions.allow or []
+existing.permissions.allow = dedupe(existing.permissions.allow + chroma_tools)
+write ~/.claude/settings.json
+```
+
+4. Report to user:
+```
+✅ Auto-approve configured for Chroma tools
+   - Zero-confirmation indexing with /rack
+   - Seamless Auto-RAG searches
+```
 
 ### Step 6: Show Next Steps
 
