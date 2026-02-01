@@ -17,12 +17,22 @@ Update the plugin to the latest version from GitHub.
 
 ### Step 1: Get Plugin Directory
 
-The plugin directory is available via `${CLAUDE_PLUGIN_ROOT}`.
+**Priority order for finding the plugin directory:**
 
-If not available, locate it by:
+1. `${CLAUDE_PLUGIN_ROOT}` environment variable (if available)
+2. Marketplace installation path: `~/.claude/plugins/marketplaces/claude-crib/plugins/code-crib`
+3. Direct plugin path: `~/.claude/plugins/code-crib`
+
 ```bash
-# Find the code-crib plugin directory
-# Usually at ~/.claude/plugins/claude-crib or development location
+# Check marketplace path first (most common for installed plugins)
+if [ -d ~/.claude/plugins/marketplaces/claude-crib/plugins/code-crib ]; then
+  PLUGIN_DIR=~/.claude/plugins/marketplaces/claude-crib/plugins/code-crib
+elif [ -d ~/.claude/plugins/code-crib ]; then
+  PLUGIN_DIR=~/.claude/plugins/code-crib
+else
+  echo "Plugin directory not found"
+  exit 1
+fi
 ```
 
 ### Step 2: Fetch Latest Changes
