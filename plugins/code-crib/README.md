@@ -107,6 +107,45 @@ All commands have both **normal** and **slang** versions:
 /remove --older-than 90 --confirm
 ```
 
+## Auto-RAG (Automatic Knowledge Retrieval)
+
+When enabled, code-crib automatically searches your knowledge stash when you ask questions and injects relevant context into responses.
+
+### How It Works
+
+```
+You ask question → Auto-search past knowledge → Context injected → Informed response
+```
+
+### Enable Auto-RAG
+
+Run `/setup` and select "Enabled" for Auto-RAG, or add to `code-crib.local.md`:
+
+```yaml
+auto_rag:
+  enabled: true
+  max_results: 3
+  min_relevance: 0.7
+```
+
+### Example
+
+**Without Auto-RAG:**
+> You: "Why is auth timing out?"
+> Claude: (Analyzes from scratch)
+
+**With Auto-RAG:**
+> You: "Why is auth timing out?"
+> Claude: "Based on your previous fix for 'Session timeout in auth middleware' (Jan 15), this looks like the same issue..."
+
+### Configuration Options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `enabled` | `false` | Master switch for auto-RAG |
+| `max_results` | `3` | Number of documents to retrieve |
+| `min_relevance` | `0.7` | Similarity threshold (0-1) |
+
 ---
 
 ## 설치
@@ -204,6 +243,45 @@ Claude Code에 Pinecone MCP가 내장되어 있습니다.
 /dump --id "doc-id-123"
 /remove --older-than 90 --confirm
 ```
+
+## Auto-RAG (자동 지식 검색)
+
+활성화하면 질문할 때 자동으로 과거 지식을 검색해서 응답에 컨텍스트를 주입합니다.
+
+### 작동 방식
+
+```
+질문 → 과거 지식 자동 검색 → 컨텍스트 주입 → 맥락있는 응답
+```
+
+### Auto-RAG 활성화
+
+`/setup` 실행 후 "Enabled" 선택, 또는 `code-crib.local.md`에 직접 추가:
+
+```yaml
+auto_rag:
+  enabled: true
+  max_results: 3
+  min_relevance: 0.7
+```
+
+### 예시
+
+**Auto-RAG 없이:**
+> 사용자: "왜 인증이 타임아웃 되지?"
+> Claude: (처음부터 분석)
+
+**Auto-RAG 활성화:**
+> 사용자: "왜 인증이 타임아웃 되지?"
+> Claude: "이전에 해결했던 '세션 타임아웃 수정' (1월 15일) 건과 비슷해 보이는데..."
+
+### 설정 옵션
+
+| 옵션 | 기본값 | 설명 |
+|------|--------|------|
+| `enabled` | `false` | Auto-RAG 활성화 여부 |
+| `max_results` | `3` | 검색할 문서 수 |
+| `min_relevance` | `0.7` | 유사도 임계값 (0-1) |
 
 ---
 

@@ -52,7 +52,28 @@ Show list of new commits.
 git pull origin main
 ```
 
-### Step 5: Report Result
+### Step 5: Ensure Permissions are Up-to-Date
+
+**After pulling updates, ensure Chroma tool permissions are configured.**
+
+1. Read `~/.claude/settings.json`
+2. Check if all required Chroma tools are in `permissions.allow`
+3. If any missing, merge them in:
+
+```json
+[
+  "mcp__plugin_code-crib_chroma__chroma_add_documents",
+  "mcp__plugin_code-crib_chroma__chroma_query_documents",
+  "mcp__plugin_code-crib_chroma__chroma_list_collections",
+  "mcp__plugin_code-crib_chroma__chroma_create_collection",
+  "mcp__plugin_code-crib_chroma__chroma_get_collection_info",
+  "mcp__plugin_code-crib_chroma__chroma_get_collection_count"
+]
+```
+
+4. Write back if changed
+
+### Step 6: Report Result
 
 **Success:**
 ```
@@ -63,6 +84,7 @@ Changes:
 - <commit 2>
 - ...
 
+✅ Permissions verified/updated
 Restart Claude Code to apply changes.
 ```
 
@@ -81,4 +103,5 @@ Try manual update:
 
 - Local changes will be preserved (git stash if needed)
 - `code-crib.local.md` is git-ignored, settings are safe
+- Permissions are auto-synced on each update
 - Restart Claude Code after update to load new features

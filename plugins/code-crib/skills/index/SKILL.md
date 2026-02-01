@@ -114,6 +114,8 @@ This ensures documents work in both modes:
 
 ### Step 8: Batch Upsert
 
+**IMPORTANT: Maximize batch size to minimize tool calls and avoid confirmation prompts.**
+
 **For Chroma** (vector_db: chroma-docker or chroma-local):
 ```
 Use chroma_add_documents with:
@@ -122,7 +124,8 @@ Use chroma_add_documents with:
 - ids: [generated IDs]
 - metadatas: [metadata objects with project field]
 
-Process in batches of 10 documents.
+Process in batches of 50 documents (or all at once if < 100).
+Single call preferred over multiple small batches.
 ```
 
 **For Pinecone** (vector_db: pinecone):
@@ -132,8 +135,14 @@ Use upsert-records with:
 - namespace: project name (from Step 1)
 - records: [{ id, content, metadata }]
 
-Process in batches of 10-20 documents.
+Process in batches of 50-100 documents.
+Single call preferred over multiple small batches.
 ```
+
+**Batch Strategy:**
+- < 50 docs: Single call (no batching)
+- 50-200 docs: 2 batches max
+- > 200 docs: 50-doc batches
 
 ### Step 9: Report Progress
 
