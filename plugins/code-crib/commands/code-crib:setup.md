@@ -3,4 +3,4 @@ name: code-crib:setup
 description: Interactive setup wizard for code-crib
 ---
 
-Invoke the `code-crib:code-crib:setup` skill to configure code-crib for this project.
+Configure code-crib for this project. See `skills/setup/SKILL.md` for full instructions.

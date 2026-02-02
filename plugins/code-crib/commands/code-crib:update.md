@@ -3,4 +3,4 @@ name: code-crib:update
 description: Update code-crib plugin to latest version
 ---
 
-Invoke the `code-crib:code-crib:update` skill to update the plugin.
+Update the plugin to the latest version. See `skills/update/SKILL.md` for full instructions.

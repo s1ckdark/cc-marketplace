@@ -1,7 +1,7 @@
 ---
 name: code-crib:scope
 description: Scope out your codebase structure
-allowed_args: "--path --depth --top --namespace"
+allowed_args: "--depth --output"
 ---
 
-Invoke the `code-crib:code-crib:analyze` skill to analyze and document the codebase structure.
+Analyze and document the codebase structure. See `skills/analyze/SKILL.md` for full instructions.

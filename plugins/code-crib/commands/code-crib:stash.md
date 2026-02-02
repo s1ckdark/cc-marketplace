@@ -4,4 +4,4 @@ description: Stash your work to the knowledge crib
 allowed_args: "--type --title --tags --namespace"
 ---
 
-Invoke the `code-crib:code-crib:save` skill to stash this work session.
+Stash this work session to your knowledge base. See `skills/save/SKILL.md` for full instructions.

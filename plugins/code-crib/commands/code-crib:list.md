@@ -1,7 +1,7 @@
 ---
 name: code-crib:list
 description: List docs in your stash
-allowed_args: "--namespace --type --limit --stats"
+allowed_args: "--type --project --limit"
 ---
 
-Invoke the `code-crib:code-crib:list` skill to show documents in your knowledge stash.
+Show documents stored in your knowledge stash. See `skills/list/SKILL.md` for full instructions.

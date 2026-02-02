@@ -1,12 +1,7 @@
 ---
 name: code-crib:inject
-description: Manually inject file or context into current conversation
-arguments:
-  - name: path
-    description: "File path or glob pattern to inject"
-    required: true
+description: Manually inject file or context into conversation
+allowed_args: "--file --context"
 ---
 
-Invoke the `code-crib:code-crib:inject` skill.
-
-Path: $ARGUMENTS
+Inject specific files or context without RAG search. See `skills/inject/SKILL.md` for full instructions.

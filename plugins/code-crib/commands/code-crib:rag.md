@@ -1,12 +1,7 @@
 ---
 name: code-crib:rag
 description: RAG mode control and one-shot queries
-arguments:
-  - name: action
-    description: "on/off to toggle, or a query string for one-shot RAG"
-    required: false
+allowed_args: "on off status query"
 ---
 
-Invoke the `code-crib:code-crib:rag` skill.
-
-Action/Query: $ARGUMENTS
+Control RAG mode or perform one-shot RAG queries. See `skills/rag/SKILL.md` for full instructions.
