@@ -7,6 +7,6 @@ arguments:
     required: true
 ---
 
-Invoke the `code-crib:inject` skill.
+Invoke the `code-crib:code-crib:inject` skill.
 
 Path: $ARGUMENTS

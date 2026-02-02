@@ -7,6 +7,6 @@ arguments:
     required: false
 ---
 
-Invoke the `code-crib:rag` skill.
+Invoke the `code-crib:code-crib:rag` skill.
 
 Action/Query: $ARGUMENTS
