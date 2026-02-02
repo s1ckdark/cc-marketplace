@@ -1,6 +1,6 @@
 ---
 name: analyze
-description: Scope out the codebase and generate searchable docs. Use when the user wants to analyze, scope, scan, or document their project structure. Alias: /scope
+description: Analyze codebase structure and generate searchable docs. Use when the user wants to analyze, scan, or document their project structure.
 ---
 
 # Analyze / Scope

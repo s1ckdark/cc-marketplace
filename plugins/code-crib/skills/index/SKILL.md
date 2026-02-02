@@ -1,6 +1,6 @@
 ---
 name: index
-description: Rack up local docs into the knowledge stash. Use when the user wants to index, rack, import, or bulk upload existing documentation. Alias: /rack
+description: Index local docs into the knowledge stash. Use when the user wants to index, import, or bulk upload existing documentation.
 ---
 
 # Index / Rack

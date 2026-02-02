@@ -1,6 +1,6 @@
 ---
 name: search
-description: Grab docs from your knowledge stash. Use when the user wants to find, search, grab, or look up previous work, solutions, or documentation. Alias: /grab
+description: Search docs from your knowledge stash. Use when the user wants to find, search, or look up previous work, solutions, or documentation.
 ---
 
 # Search / Grab

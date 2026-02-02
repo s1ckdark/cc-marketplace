@@ -1,6 +1,6 @@
 ---
 name: save
-description: Stash your work to the knowledge crib. Use when the user wants to save, stash, store, or document their work session. Alias: /stash
+description: Save your work to the knowledge stash. Use when the user wants to save, store, or document their work session.
 ---
 
 # Save / Stash
