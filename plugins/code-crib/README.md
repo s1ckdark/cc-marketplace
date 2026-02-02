@@ -1,8 +1,8 @@
 # code-crib
 
-> Your knowledge stash for Claude Code - Stash work, grab past solutions, rack up your codebase docs
+> Your knowledge stash for Claude Code - Save work sessions, search past solutions, analyze your codebase
 >
-> Claude Code를 위한 지식 창고 - 작업 저장, 과거 솔루션 검색, 코드베이스 문서화
+> Claude Code를 위한 지식 창고 - 작업 세션 저장, 과거 솔루션 검색, 코드베이스 분석
 
 [![Plugin](https://img.shields.io/badge/Claude_Code-Plugin-blue.svg)](https://github.com/s1ckdark/claude-crib)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -19,6 +19,9 @@
 
 # Install plugin
 /plugin install code-crib@claude-crib --scope project
+
+# Run setup
+/code-crib:setup
 ```
 
 ## Setup
@@ -27,45 +30,41 @@
 
 | Option | Pros | Setup |
 |--------|------|-------|
-| **Pinecone** (default) | Zero maintenance, scalable | `PINECONE_API_KEY` env var |
-| **Chroma** (local) | Free, privacy | Docker required |
-| **MongoDB Atlas** | Familiar, rich queries | `MONGODB_URI` env var |
+| **Chroma** (recommended) | Free, local, privacy | Docker required |
+| **Pinecone** | Zero maintenance, scalable | `PINECONE_API_KEY` env var |
 
-### Pinecone Setup (Recommended)
+### Chroma Setup (Recommended)
 
-Claude Code has Pinecone MCP built-in.
+```bash
+# Start Chroma with Docker
+docker run -d -p 8000:8000 chromadb/chroma
 
-1. Get API key from [Pinecone](https://pinecone.io)
-2. Add to `~/.claude/settings.json`:
-   ```json
-   {
-     "env": {
-       "PINECONE_API_KEY": "your-api-key"
-     }
-   }
-   ```
-3. Create index: `/pinecone quickstart` or via console
+# Run setup wizard
+/code-crib:setup
+```
 
 ## Commands
 
-All commands have both **normal** and **slang** versions:
+| Command | Description |
+|---------|-------------|
+| `/code-crib:stash` | Save your work session to knowledge stash |
+| `/code-crib:grab` | Search docs from your stash |
+| `/code-crib:rack` | Bulk index local markdown files |
+| `/code-crib:list` | List documents in your stash |
+| `/code-crib:remove` | Delete documents from stash |
+| `/code-crib:analyze` | Analyze and document codebase structure |
+| `/code-crib:scope` | Same as analyze |
+| `/code-crib:rag` | RAG mode control (on/off/query) |
+| `/code-crib:inject` | Manual file injection into context |
+| `/code-crib:toggle-rag` | Toggle Auto-RAG on/off |
+| `/code-crib:setup` | Configuration wizard |
+| `/code-crib:update` | Update plugin to latest version |
 
-| Normal | Slang | Description |
-|--------|-------|-------------|
-| `/save` | `/stash` | Stash your work to the knowledge crib |
-| `/search` | `/grab` | Grab docs from your stash |
-| `/index` | `/rack` | Rack up local docs into the stash |
-| `/analyze` | `/scope` | Scope out the codebase |
-| `/remove` | `/dump` | Dump docs from your stash |
-| `/list` | `/check` | Check what's in your stash |
-| `/rag` | - | RAG mode control (on/off/query) |
-| `/inject` | - | Manual context injection |
-
-### `/save` or `/stash` - Stash Your Work
+### `/code-crib:stash` - Save Your Work
 
 ```bash
-/stash --type bugfix --tags "auth,session" --title "Session timeout fix"
-/save   # auto-detect everything
+/code-crib:stash
+/code-crib:stash --type bugfix --tags "auth,session" --title "Session timeout fix"
 ```
 
 **Args:**
@@ -74,70 +73,43 @@ All commands have both **normal** and **slang** versions:
 - `--tags`: Tags (comma-separated)
 - `--namespace`: Project namespace
 
-### `/search` or `/grab` - Grab Past Solutions
+### `/code-crib:grab` - Search Past Solutions
 
 ```bash
-/grab "session timeout error"
-/search "authentication" --type bugfix --limit 3
+/code-crib:grab "session timeout error"
+/code-crib:grab "authentication" --type bugfix --limit 3
 ```
 
-### `/index` or `/rack` - Bulk Index Docs
+### `/code-crib:rack` - Bulk Index Docs
 
 ```bash
-/rack
-/index --path ./docs/knowledge --namespace my-project
+/code-crib:rack
+/code-crib:rack --path ./docs/knowledge
 ```
 
-### `/analyze` or `/scope` - Scope the Codebase
+### `/code-crib:analyze` - Analyze Codebase
 
 ```bash
-/scope
-/analyze --depth 5 --top 30
+/code-crib:analyze
+/code-crib:analyze --depth 5 --top 30
 ```
 
-### `/check` or `/list` - See Your Stash
+### `/code-crib:rag` - RAG Mode Control
 
 ```bash
-/check --namespace my-project
-/list --stats
+/code-crib:rag              # Show current status
+/code-crib:rag on           # Enable RAG mode
+/code-crib:rag off          # Disable RAG mode
+/code-crib:rag "question"   # One-shot RAG query
 ```
 
-### `/dump` or `/remove` - Clean Up
+### `/code-crib:inject` - Manual Context Injection
 
 ```bash
-/dump --id "doc-id-123"
-/remove --older-than 90 --confirm
+/code-crib:inject src/auth/login.ts      # Single file
+/code-crib:inject src/components/*.tsx   # Glob pattern
+/code-crib:inject src/api/ --depth 2     # Directory
 ```
-
-### `/rag` - RAG Mode Control
-
-Control RAG (Retrieval-Augmented Generation) mode or perform one-shot queries.
-
-```bash
-/rag              # Show current RAG status
-/rag on           # Enable persistent RAG mode
-/rag off          # Disable RAG mode
-/rag "question"   # One-shot RAG query (search + answer)
-```
-
-**Modes:**
-- **OFF (default)**: Questions answered without knowledge search
-- **ON**: Every question automatically searches your stash
-- **One-shot**: Use `/rag "question"` for single RAG query without enabling persistent mode
-
-### `/inject` - Manual Context Injection
-
-Inject specific files into context without RAG search.
-
-```bash
-/inject src/auth/login.ts              # Single file
-/inject src/components/*.tsx           # Glob pattern
-/inject src/api/ --depth 2             # Directory
-```
-
-**Difference from `/rag`:**
-- `/rag "question"` → Searches and finds relevant context automatically
-- `/inject path` → You specify exactly what to include (no search)
 
 ---
 
@@ -149,6 +121,9 @@ Inject specific files into context without RAG search.
 
 # 플러그인 설치
 /plugin install code-crib@claude-crib --scope project
+
+# 설정 실행
+/code-crib:setup
 ```
 
 ## 설정
@@ -157,45 +132,41 @@ Inject specific files into context without RAG search.
 
 | 옵션 | 장점 | 설정 |
 |------|------|------|
-| **Pinecone** (기본) | 관리 불필요, 확장성 | `PINECONE_API_KEY` 환경변수 |
-| **Chroma** (로컬) | 무료, 프라이버시 | Docker 필요 |
-| **MongoDB Atlas** | 익숙함, 풍부한 쿼리 | `MONGODB_URI` 환경변수 |
+| **Chroma** (권장) | 무료, 로컬, 프라이버시 | Docker 필요 |
+| **Pinecone** | 관리 불필요, 확장성 | `PINECONE_API_KEY` 환경변수 |
 
-### Pinecone 설정 (권장)
+### Chroma 설정 (권장)
 
-Claude Code에 Pinecone MCP가 내장되어 있습니다.
+```bash
+# Docker로 Chroma 시작
+docker run -d -p 8000:8000 chromadb/chroma
 
-1. [Pinecone](https://pinecone.io)에서 API 키 발급
-2. `~/.claude/settings.json`에 추가:
-   ```json
-   {
-     "env": {
-       "PINECONE_API_KEY": "your-api-key"
-     }
-   }
-   ```
-3. 인덱스 생성: `/pinecone quickstart` 또는 콘솔에서 직접
+# 설정 마법사 실행
+/code-crib:setup
+```
 
 ## 명령어
 
-모든 명령어는 **일반** 버전과 **슬랭** 버전이 있습니다:
+| 명령어 | 설명 |
+|--------|------|
+| `/code-crib:stash` | 작업 세션을 지식 창고에 저장 |
+| `/code-crib:grab` | 저장된 문서 검색 |
+| `/code-crib:rack` | 로컬 마크다운 파일 일괄 인덱싱 |
+| `/code-crib:list` | 저장된 문서 목록 |
+| `/code-crib:remove` | 저장된 문서 삭제 |
+| `/code-crib:analyze` | 코드베이스 구조 분석 및 문서화 |
+| `/code-crib:scope` | analyze와 동일 |
+| `/code-crib:rag` | RAG 모드 제어 (on/off/query) |
+| `/code-crib:inject` | 수동 파일 컨텍스트 주입 |
+| `/code-crib:toggle-rag` | Auto-RAG 토글 |
+| `/code-crib:setup` | 설정 마법사 |
+| `/code-crib:update` | 플러그인 최신 버전으로 업데이트 |
 
-| 일반 | 슬랭 | 설명 |
-|------|------|------|
-| `/save` | `/stash` | 작업을 지식 창고에 저장 |
-| `/search` | `/grab` | 저장된 문서 검색 |
-| `/index` | `/rack` | 로컬 문서 일괄 인덱싱 |
-| `/analyze` | `/scope` | 코드베이스 분석 |
-| `/remove` | `/dump` | 저장된 문서 삭제 |
-| `/list` | `/check` | 저장된 문서 목록 확인 |
-| `/rag` | - | RAG 모드 제어 (on/off/query) |
-| `/inject` | - | 수동 컨텍스트 주입 |
-
-### `/save` 또는 `/stash` - 작업 저장
+### `/code-crib:stash` - 작업 저장
 
 ```bash
-/stash --type bugfix --tags "auth,session" --title "세션 타임아웃 수정"
-/save   # 모든 것 자동 감지
+/code-crib:stash
+/code-crib:stash --type bugfix --tags "auth,session" --title "세션 타임아웃 수정"
 ```
 
 **인자:**
@@ -204,107 +175,76 @@ Claude Code에 Pinecone MCP가 내장되어 있습니다.
 - `--tags`: 태그 (쉼표 구분)
 - `--namespace`: 프로젝트 네임스페이스
 
-### `/search` 또는 `/grab` - 솔루션 검색
+### `/code-crib:grab` - 솔루션 검색
 
 ```bash
-/grab "세션 타임아웃 에러"
-/search "인증" --type bugfix --limit 3
+/code-crib:grab "세션 타임아웃 에러"
+/code-crib:grab "인증" --type bugfix --limit 3
 ```
 
-### `/index` 또는 `/rack` - 문서 일괄 인덱싱
+### `/code-crib:rack` - 문서 일괄 인덱싱
 
 ```bash
-/rack
-/index --path ./docs/knowledge --namespace my-project
+/code-crib:rack
+/code-crib:rack --path ./docs/knowledge
 ```
 
-### `/analyze` 또는 `/scope` - 코드베이스 분석
+### `/code-crib:analyze` - 코드베이스 분석
 
 ```bash
-/scope
-/analyze --depth 5 --top 30
+/code-crib:analyze
+/code-crib:analyze --depth 5 --top 30
 ```
 
-### `/check` 또는 `/list` - 저장 목록 확인
+### `/code-crib:rag` - RAG 모드 제어
 
 ```bash
-/check --namespace my-project
-/list --stats
+/code-crib:rag              # 현재 상태 표시
+/code-crib:rag on           # RAG 모드 활성화
+/code-crib:rag off          # RAG 모드 비활성화
+/code-crib:rag "질문"       # 일회성 RAG 쿼리
 ```
 
-### `/dump` 또는 `/remove` - 정리
+### `/code-crib:inject` - 수동 컨텍스트 주입
 
 ```bash
-/dump --id "doc-id-123"
-/remove --older-than 90 --confirm
+/code-crib:inject src/auth/login.ts      # 단일 파일
+/code-crib:inject src/components/*.tsx   # Glob 패턴
+/code-crib:inject src/api/ --depth 2     # 디렉토리
 ```
-
-### `/rag` - RAG 모드 제어
-
-RAG (검색 증강 생성) 모드를 제어하거나 일회성 쿼리를 수행합니다.
-
-```bash
-/rag              # 현재 RAG 상태 표시
-/rag on           # 지속적 RAG 모드 활성화
-/rag off          # RAG 모드 비활성화
-/rag "질문"       # 일회성 RAG 쿼리 (검색 + 응답)
-```
-
-**모드:**
-- **OFF (기본값)**: 지식 검색 없이 질문에 응답
-- **ON**: 모든 질문이 자동으로 stash 검색
-- **일회성**: `/rag "질문"`으로 지속 모드 없이 단일 RAG 쿼리
-
-### `/inject` - 수동 컨텍스트 주입
-
-RAG 검색 없이 특정 파일을 컨텍스트에 주입합니다.
-
-```bash
-/inject src/auth/login.ts              # 단일 파일
-/inject src/components/*.tsx           # Glob 패턴
-/inject src/api/ --depth 2             # 디렉토리
-```
-
-**`/rag`와의 차이:**
-- `/rag "질문"` → 자동으로 관련 컨텍스트를 검색
-- `/inject 경로` → 정확히 무엇을 포함할지 직접 지정 (검색 없음)
 
 ---
 
-## Project Structure / 프로젝트 구조
+## Project Structure
 
 ```
-claude-crib/
-├── plugins/
-│   └── code-crib/
-│       ├── .claude-plugin/
-│       │   └── plugin.json
-│       ├── commands/           # Slash commands (normal + slang)
-│       │   ├── save.md / stash.md
-│       │   ├── search.md / grab.md
-│       │   ├── index.md / rack.md
-│       │   ├── analyze.md / scope.md
-│       │   ├── remove.md / dump.md
-│       │   └── list.md / check.md
-│       ├── agents/
-│       │   ├── documenter.md
-│       │   └── codebase-analyzer.md
-│       ├── skills/
-│       │   └── save/, search/, index/, analyze/
-│       ├── hooks/
-│       │   └── auto-document.md
-│       └── templates/
-│           └── bugfix.md, feature.md, refactor.md, analysis.md
-└── README.md
+plugins/code-crib/
+├── .claude-plugin/
+│   └── plugin.json
+├── commands/
+│   ├── code-crib:stash.md
+│   ├── code-crib:grab.md
+│   ├── code-crib:rack.md
+│   ├── code-crib:list.md
+│   ├── code-crib:remove.md
+│   ├── code-crib:analyze.md
+│   ├── code-crib:scope.md
+│   ├── code-crib:rag.md
+│   ├── code-crib:inject.md
+│   ├── code-crib:toggle-rag.md
+│   ├── code-crib:setup.md
+│   └── code-crib:update.md
+├── skills/
+│   └── save/, search/, index/, analyze/, ...
+├── agents/
+│   ├── documenter.md
+│   └── codebase-analyzer.md
+├── hooks/
+│   └── hooks.json
+├── templates/
+│   └── bugfix.md, feature.md, ...
+└── code-crib.local.md
 ```
-
-## Token Savings / 토큰 절약
-
-| Scenario / 시나리오 | Before / 이전 | After / 이후 |
-|---------------------|---------------|--------------|
-| Same bug recurs / 동일 버그 재발 | Full code re-analysis / 전체 코드 재분석 | Instant grab from stash / 즉시 검색 |
-| Architecture Q / 아키텍처 질문 | Explore from scratch / 처음부터 탐색 | Reuse saved analysis / 저장된 분석 재사용 |
-| Repeated patterns / 반복 패턴 | Write from scratch / 처음부터 작성 | Use templates / 템플릿 사용 |
 
 ## License
 
