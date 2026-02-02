@@ -5,8 +5,13 @@
         "matcher": "*",
         "hooks": [
           {
+            "type": "command",
+            "command": "bash -c 'SCRIPT=\"${CLAUDE_PLUGIN_ROOT:-}/hooks/scripts/check-rag-config.sh\"; [ -x \"$SCRIPT\" ] && \"$SCRIPT\" || echo \"{\\\"rag_enabled\\\": false, \\\"reason\\\": \\\"script_not_found\\\"}\"'",
+            "onError": "ignore"
+          },
+          {
             "type": "prompt",
-            "prompt": "Check if RAG mode is enabled by reading ${CLAUDE_PLUGIN_ROOT}/code-crib.local.md.\n\nIF auto_rag.enabled is TRUE:\n1. Extract the user's question/request from their message\n2. Search the knowledge stash using vector search (same as /grab)\n3. If relevant results found (relevance > 0.7), prepend context:\n   '📚 [RAG Context] Found relevant knowledge:\\n[summary of top 3 results]\\n---\\n'\n4. Continue processing the user's request with this context\n\nIF auto_rag.enabled is FALSE or file doesn't exist:\n- Do nothing, let the message be processed normally\n\nIMPORTANT: This should be fast and silent. Don't announce RAG lookups unless results are found."
+            "prompt": "Check the previous command's output for RAG configuration.\n\nIF output shows 'rag_enabled': true:\n1. Extract the user's question/request from their message\n2. Search the knowledge stash using the Chroma MCP tools (chroma_query_documents on collection 'code-crib' or 'code-crib-{project}')\n3. If relevant results found (distance < 0.3), prepend context:\n   '[RAG Context] Found relevant knowledge:\\n[summary of top 3 results]\\n---\\n'\n4. Continue processing the user's request with this context\n\nIF output shows 'rag_enabled': false, OR no output, OR command failed:\n- Do nothing, process the user's message normally without RAG\n\nIMPORTANT: This should be fast and silent. Don't announce RAG lookups unless results are found. If anything fails, just continue without RAG."
           }
         ]
       }
