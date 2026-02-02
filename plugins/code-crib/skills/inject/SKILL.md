@@ -10,10 +10,10 @@ Manually inject specific files or context into the current conversation without 
 ## Usage
 
 ```
-/inject src/auth/login.ts              # Single file
-/inject src/components/*.tsx           # Glob pattern
-/inject src/api/ --depth 2             # Directory with depth
-/inject CODEBASE.md                    # Documentation file
+/code-crib:inject src/auth/login.ts              # Single file
+/code-crib:inject src/components/*.tsx           # Glob pattern
+/code-crib:inject src/api/ --depth 2             # Directory with depth
+/code-crib:inject CODEBASE.md                    # Documentation file
 ```
 
 ## When to Use
@@ -48,19 +48,19 @@ summary_only = --summary flag present
 
 **Single file:**
 ```
-/inject src/auth.ts
+/code-crib:inject src/auth.ts
 → Read src/auth.ts
 ```
 
 **Glob pattern:**
 ```
-/inject src/**/*.test.ts
+/code-crib:inject src/**/*.test.ts
 → Glob match, read all matching files
 ```
 
 **Directory:**
 ```
-/inject src/components/
+/code-crib:inject src/components/
 → List files up to --depth
 → Read each file
 ```

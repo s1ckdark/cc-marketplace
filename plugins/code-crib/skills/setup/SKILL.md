@@ -10,7 +10,7 @@ Interactive setup for first-time configuration.
 ## Usage
 
 ```
-/setup
+/code-crib:setup
 ```
 
 ## Instructions

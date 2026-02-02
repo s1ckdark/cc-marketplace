@@ -10,8 +10,8 @@ Stash your work session as a doc in the knowledge base.
 ## Usage
 
 ```
-/save                    # or /stash
-/stash --type bugfix --tags "auth,session"
+/code-crib:stash                    # (stash command)
+/code-crib:stash --type bugfix --tags "auth,session"
 ```
 
 ## Parameters

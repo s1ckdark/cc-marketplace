@@ -10,9 +10,9 @@ Quickly enable or disable Auto-RAG without running full setup.
 ## Usage
 
 ```
-/toggle-rag          # Show current status and toggle options
-/toggle-rag on       # Enable Auto-RAG
-/toggle-rag off      # Disable Auto-RAG
+/code-crib:toggle-rag          # Show current status and toggle options
+/code-crib:toggle-rag on       # Enable Auto-RAG
+/code-crib:toggle-rag off      # Disable Auto-RAG
 ```
 
 ## Instructions

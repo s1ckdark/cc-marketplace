@@ -10,10 +10,10 @@ Control RAG mode or perform one-shot RAG queries.
 ## Usage
 
 ```
-/rag              # Show current status
-/rag on           # Enable RAG mode (persistent)
-/rag off          # Disable RAG mode
-/rag "질문"       # One-shot RAG query (search + answer)
+/code-crib:rag              # Show current status
+/code-crib:rag on           # Enable RAG mode (persistent)
+/code-crib:rag off          # Disable RAG mode
+/code-crib:rag "질문"       # One-shot RAG query (search + answer)
 ```
 
 ## Behavior Matrix

@@ -10,9 +10,9 @@ Scope out your codebase and generate searchable docs for each directory.
 ## Usage
 
 ```
-/analyze                 # or /scope
-/scope --path ./packages/core --depth 5
-/analyze --top 30 --namespace my-monorepo
+/code-crib:analyze                 # (scope command)
+/code-crib:scope --path ./packages/core --depth 5
+/code-crib:analyze --top 30 --namespace my-monorepo
 ```
 
 ## Parameters

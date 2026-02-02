@@ -10,9 +10,9 @@ Grab relevant docs from your knowledge stash.
 ## Usage
 
 ```
-/search "session timeout handling"   # or /grab
-/grab "authentication" --type bugfix --limit 3
-/grab "auth bug" --project other-app  # (shared mode only)
+/code-crib:grab "session timeout handling"   # (grab command)
+/code-crib:grab "authentication" --type bugfix --limit 3
+/code-crib:grab "auth bug" --project other-app  # (shared mode only)
 ```
 
 ## Parameters

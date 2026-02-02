@@ -10,7 +10,7 @@ Update the plugin to the latest version from GitHub.
 ## Usage
 
 ```
-/update
+/code-crib:update
 ```
 
 ## Instructions

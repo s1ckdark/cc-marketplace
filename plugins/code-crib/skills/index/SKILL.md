@@ -10,9 +10,9 @@ Rack up your local docs into the vector database.
 ## Usage
 
 ```
-/index                   # or /rack
-/rack --path ./docs/knowledge
-/index --force           # Re-index all documents
+/code-crib:rack                   # (rack command)
+/code-crib:rack --path ./docs/knowledge
+/code-crib:rack --force           # Re-index all documents
 ```
 
 ## Parameters
