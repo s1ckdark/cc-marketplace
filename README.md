@@ -124,6 +124,7 @@ If you prefer manual configuration:
     }
   }
 }
+# Note: chroma-mcp is auto-installed via uvx on first use
 
 # 2. Run Chroma server (choose one):
 
@@ -268,6 +269,7 @@ code-crib:setup
     }
   }
 }
+# 참고: chroma-mcp는 첫 사용 시 uvx를 통해 자동 설치됨
 
 # 2. Chroma 서버 실행 (둘 중 선택):
 

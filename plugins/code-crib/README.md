@@ -58,6 +58,8 @@ All commands have both **normal** and **slang** versions:
 | `/analyze` | `/scope` | Scope out the codebase |
 | `/remove` | `/dump` | Dump docs from your stash |
 | `/list` | `/check` | Check what's in your stash |
+| `/rag` | - | RAG mode control (on/off/query) |
+| `/inject` | - | Manual context injection |
 
 ### `/save` or `/stash` - Stash Your Work
 
@@ -107,44 +109,35 @@ All commands have both **normal** and **slang** versions:
 /remove --older-than 90 --confirm
 ```
 
-## Auto-RAG (Automatic Knowledge Retrieval)
+### `/rag` - RAG Mode Control
 
-When enabled, code-crib automatically searches your knowledge stash when you ask questions and injects relevant context into responses.
+Control RAG (Retrieval-Augmented Generation) mode or perform one-shot queries.
 
-### How It Works
-
-```
-You ask question → Auto-search past knowledge → Context injected → Informed response
-```
-
-### Enable Auto-RAG
-
-Run `/setup` and select "Enabled" for Auto-RAG, or add to `code-crib.local.md`:
-
-```yaml
-auto_rag:
-  enabled: true
-  max_results: 3
-  min_relevance: 0.7
+```bash
+/rag              # Show current RAG status
+/rag on           # Enable persistent RAG mode
+/rag off          # Disable RAG mode
+/rag "question"   # One-shot RAG query (search + answer)
 ```
 
-### Example
+**Modes:**
+- **OFF (default)**: Questions answered without knowledge search
+- **ON**: Every question automatically searches your stash
+- **One-shot**: Use `/rag "question"` for single RAG query without enabling persistent mode
 
-**Without Auto-RAG:**
-> You: "Why is auth timing out?"
-> Claude: (Analyzes from scratch)
+### `/inject` - Manual Context Injection
 
-**With Auto-RAG:**
-> You: "Why is auth timing out?"
-> Claude: "Based on your previous fix for 'Session timeout in auth middleware' (Jan 15), this looks like the same issue..."
+Inject specific files into context without RAG search.
 
-### Configuration Options
+```bash
+/inject src/auth/login.ts              # Single file
+/inject src/components/*.tsx           # Glob pattern
+/inject src/api/ --depth 2             # Directory
+```
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `enabled` | `false` | Master switch for auto-RAG |
-| `max_results` | `3` | Number of documents to retrieve |
-| `min_relevance` | `0.7` | Similarity threshold (0-1) |
+**Difference from `/rag`:**
+- `/rag "question"` → Searches and finds relevant context automatically
+- `/inject path` → You specify exactly what to include (no search)
 
 ---
 
@@ -195,6 +188,8 @@ Claude Code에 Pinecone MCP가 내장되어 있습니다.
 | `/analyze` | `/scope` | 코드베이스 분석 |
 | `/remove` | `/dump` | 저장된 문서 삭제 |
 | `/list` | `/check` | 저장된 문서 목록 확인 |
+| `/rag` | - | RAG 모드 제어 (on/off/query) |
+| `/inject` | - | 수동 컨텍스트 주입 |
 
 ### `/save` 또는 `/stash` - 작업 저장
 
@@ -244,44 +239,35 @@ Claude Code에 Pinecone MCP가 내장되어 있습니다.
 /remove --older-than 90 --confirm
 ```
 
-## Auto-RAG (자동 지식 검색)
+### `/rag` - RAG 모드 제어
 
-활성화하면 질문할 때 자동으로 과거 지식을 검색해서 응답에 컨텍스트를 주입합니다.
+RAG (검색 증강 생성) 모드를 제어하거나 일회성 쿼리를 수행합니다.
 
-### 작동 방식
-
-```
-질문 → 과거 지식 자동 검색 → 컨텍스트 주입 → 맥락있는 응답
-```
-
-### Auto-RAG 활성화
-
-`/setup` 실행 후 "Enabled" 선택, 또는 `code-crib.local.md`에 직접 추가:
-
-```yaml
-auto_rag:
-  enabled: true
-  max_results: 3
-  min_relevance: 0.7
+```bash
+/rag              # 현재 RAG 상태 표시
+/rag on           # 지속적 RAG 모드 활성화
+/rag off          # RAG 모드 비활성화
+/rag "질문"       # 일회성 RAG 쿼리 (검색 + 응답)
 ```
 
-### 예시
+**모드:**
+- **OFF (기본값)**: 지식 검색 없이 질문에 응답
+- **ON**: 모든 질문이 자동으로 stash 검색
+- **일회성**: `/rag "질문"`으로 지속 모드 없이 단일 RAG 쿼리
 
-**Auto-RAG 없이:**
-> 사용자: "왜 인증이 타임아웃 되지?"
-> Claude: (처음부터 분석)
+### `/inject` - 수동 컨텍스트 주입
 
-**Auto-RAG 활성화:**
-> 사용자: "왜 인증이 타임아웃 되지?"
-> Claude: "이전에 해결했던 '세션 타임아웃 수정' (1월 15일) 건과 비슷해 보이는데..."
+RAG 검색 없이 특정 파일을 컨텍스트에 주입합니다.
 
-### 설정 옵션
+```bash
+/inject src/auth/login.ts              # 단일 파일
+/inject src/components/*.tsx           # Glob 패턴
+/inject src/api/ --depth 2             # 디렉토리
+```
 
-| 옵션 | 기본값 | 설명 |
-|------|--------|------|
-| `enabled` | `false` | Auto-RAG 활성화 여부 |
-| `max_results` | `3` | 검색할 문서 수 |
-| `min_relevance` | `0.7` | 유사도 임계값 (0-1) |
+**`/rag`와의 차이:**
+- `/rag "질문"` → 자동으로 관련 컨텍스트를 검색
+- `/inject 경로` → 정확히 무엇을 포함할지 직접 지정 (검색 없음)
 
 ---
 
