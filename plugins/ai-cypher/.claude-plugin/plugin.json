@@ -1,0 +1,9 @@
+{
+  "name": "ai-cypher",
+  "version": "0.1.0",
+  "description": "AI Cypher - Multi-model freestyle debates where AI crews spit knowledge and build consensus",
+  "author": {
+    "name": "Dave"
+  },
+  "keywords": ["cypher", "debate", "ai-models", "consensus", "freestyle", "crew-talk", "ralph-loop"]
+}

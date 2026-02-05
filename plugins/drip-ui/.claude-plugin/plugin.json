@@ -1,0 +1,9 @@
+{
+  "name": "drip-ui",
+  "version": "0.1.0",
+  "description": "Drip UI - Generate stylish frontend components using v0, Gemini, and Z.ai. Text to UI, design to code, multi-service comparison.",
+  "author": {
+    "name": "Dave"
+  },
+  "keywords": ["frontend", "ui", "design", "v0", "gemini", "zai", "react", "nextjs", "code-generation", "drip"]
+}

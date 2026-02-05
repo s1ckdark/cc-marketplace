@@ -1,0 +1,14 @@
+{
+  "hooks": [
+    {
+      "event": "Stop",
+      "matcher": "",
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "If a cypher was just completed (check for cypher JSON files in cyphers/ directory that have a 'transcript' but no 'validated' field), trigger ralph-loop validation on the conclusion. The ralph-loop should verify: 1) All crew member viewpoints are fairly represented, 2) The conclusion is logically consistent, 3) Areas of agreement and disagreement are clearly identified, 4) The recommendation (if any) follows from the cypher. After validation, update the cypher JSON with 'validated: true' and 'validationNotes' fields."
+        }
+      ]
+    }
+  ]
+}
