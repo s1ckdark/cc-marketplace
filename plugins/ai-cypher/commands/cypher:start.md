@@ -43,8 +43,8 @@ which ollama >/dev/null 2>&1 && echo "ollama:OK" || echo "ollama:MISSING"
 which codex >/dev/null 2>&1 && echo "codex:OK" || echo "codex:MISSING"
 which gemini >/dev/null 2>&1 && echo "gemini:OK" || echo "gemini:MISSING"
 which openai >/dev/null 2>&1 && echo "gpt:OK" || echo "gpt:MISSING"
-# zai uses npx, always available if npm works
-which npx >/dev/null 2>&1 && echo "zai:OK" || echo "zai:MISSING"
+# zai uses API, check for key
+[ -n "$ZAI_API_KEY" ] && echo "zai:OK" || echo "zai:MISSING (no ZAI_API_KEY)"
 ```
 
 **If any requested crew member is MISSING:**
@@ -149,7 +149,8 @@ Use these CLI patterns to invoke models (actual commands from config):
 | **ollama** | `ollama run llama3.2 "prompt"` |
 | **gemini** | `gemini -p "prompt"` |
 | **codex** | `codex exec "prompt"` |
-| **zai** | `npx @z_ai/coding-helper "prompt"` |
+| **zai** | `curl -s "https://api.z.ai/api/coding/paas/v4/chat/completions" -H "Authorization: Bearer $ZAI_API_KEY" -H "Content-Type: application/json" -d '{"model":"glm-4.7","messages":[{"role":"user","content":"prompt"}]}' \| jq -r '.choices[0].message.content'` |
+| **zai-free** | `curl -s "https://api.z.ai/api/paas/v4/chat/completions" -H "Authorization: Bearer $ZAI_API_KEY" -H "Content-Type: application/json" -d '{"model":"glm-4.7-flash","messages":[{"role":"user","content":"prompt"}]}' \| jq -r '.choices[0].message.content'` |
 
 Check `.claude/ai-cypher.local.md` for user's specific configurations and customizations.
 

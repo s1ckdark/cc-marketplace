@@ -18,7 +18,7 @@ which claude && claude --version 2>/dev/null || echo "NOT_FOUND: claude"
 which codex && codex --version 2>/dev/null || echo "NOT_FOUND: codex"
 which ollama && ollama --version 2>/dev/null || echo "NOT_FOUND: ollama"
 which gemini && gemini --version 2>/dev/null || echo "NOT_FOUND: gemini"
-npx @z_ai/coding-helper --version 2>/dev/null || echo "NOT_FOUND: zai"
+[ -n "$ZAI_API_KEY" ] && echo "zai:OK (API key set)" || echo "NOT_FOUND: zai (ZAI_API_KEY not set)"
 which openai || echo "NOT_FOUND: openai"
 ```
 
@@ -42,7 +42,7 @@ Model Status:
   ✓ ollama    - Ollama installed (run: ollama serve)
   ✗ codex     - Not installed
   ✗ gemini    - Not installed
-  ✓ zai       - Z.ai available via npx
+  ✓ zai       - Z.ai API key set (Coding Plan + Free)
   ✗ gpt       - OpenAI CLI not installed
 
 API Keys:
@@ -91,11 +91,14 @@ pip install openai
 # Then: export OPENAI_API_KEY="sk-..."
 ```
 
-**Z.ai Coding Helper**
+**Z.ai (GLM API)**
 ```bash
-# No installation needed - uses npx
-# Just need subscription at z.ai
-npx @z_ai/coding-helper --help
+# No CLI installation needed - uses curl API
+# Get API key at open.bigmodel.cn
+# Two endpoints available:
+#   zai      → api.z.ai/api/coding/paas/v4 (Coding Plan, glm-4.7)
+#   zai-free → api.z.ai/api/paas/v4 (Free, glm-4.7-flash)
+export ZAI_API_KEY="your-key-here"
 ```
 
 ### 5. Create Config File
@@ -114,7 +117,8 @@ Which models should be in your default cypher crew?
 ☑ ollama   - Local Ollama (installed)
 ☐ codex    - OpenAI Codex (not installed)
 ☐ gemini   - Google Gemini (not installed)
-☑ zai      - Z.ai (available via npx)
+☑ zai      - Z.ai Coding Plan (API key set)
+☑ zai-free - Z.ai Free (glm-4.7-flash)
 ☐ gpt      - OpenAI GPT (not installed)
 ```
 
@@ -133,7 +137,7 @@ ollama run llama3.2 "Say 'ready' if you can hear me"
 ```
 === Setup Complete ===
 
-Your default crew: claude, ollama, zai
+Your default crew: claude, codex, gemini, ollama
 
 To start a cypher:
   /cypher:start "Your topic here"

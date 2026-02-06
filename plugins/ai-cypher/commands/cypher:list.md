@@ -159,3 +159,4 @@ Model emoji mapping:
 - gemini → 🟣
 - codex → 🟡
 - zai → ⚪
+- zai-free → ⚪
