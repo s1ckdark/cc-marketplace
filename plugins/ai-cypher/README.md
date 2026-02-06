@@ -6,22 +6,25 @@ AI Cypher는 여러 AI 모델들이 모여 주제에 대해 토론하고 합의�
 
 ## Features
 
-- **Multi-Model Orchestration**: Claude, GPT, Ollama, Gemini 등 다양한 AI 모델 간 토론 조율
+- **Multi-Model Orchestration**: Claude, GPT, Ollama, Gemini, Codex, Z.ai 등 다양한 AI 모델 간 토론 조율
 - **Format Flexibility**: 주제에 따라 라운드 기반 또는 프리스타일 형식 자동 선택
 - **Fair Moderation**: MC(호스트)가 공정한 참여를 보장
 - **Ralph Loop Validation**: 합의 품질 자동 검증
-- **Complete Audit Trail**: 모든 토론 기록을 JSON으로 저장
+- **Complete Audit Trail**: 모든 토론 기록을 JSON + Markdown으로 저장
 
 ## Quick Start
 
 ```bash
-# 기본 사이퍼 시작
+# 1. 먼저 설정 (최초 1회)
+/cypher:setup
+
+# 2. 기본 사이퍼 시작
 /cypher:start "REST vs GraphQL for mobile apps"
 
-# 특정 크루로 사이퍼
-/cypher:start "Best database for real-time app" --crew claude,gpt,ollama
+# 3. 특정 크루로 사이퍼
+/cypher:start "Best database for real-time app" --crew claude,codex,zai
 
-# MC 지정
+# 4. MC 지정
 /cypher:start "Microservices vs Monolith" --mc claude --crew gpt,gemini,ollama
 ```
 
@@ -29,7 +32,10 @@ AI Cypher는 여러 AI 모델들이 모여 주제에 대해 토론하고 합의�
 
 | Command | Description |
 |---------|-------------|
+| `/cypher:setup` | **최초 설정** - 모델 설치 및 설정 마법사 |
 | `/cypher:start <topic>` | AI 사이퍼 시작 |
+| `/cypher:list` | 모든 사이퍼 기록 보기 |
+| `/cypher:list --export latest` | 최근 사이퍼를 마크다운으로 내보내기 |
 | `/cypher:config` | 설정 확인 및 관리 |
 | `/cypher:config add-model` | 새 모델 추가 |
 | `/cypher:config set-default crew <models>` | 기본 크루 설정 |
@@ -73,6 +79,9 @@ Consensus reached: Start with modular monolith, plan for microservices.
 | claude | `claude --print -p "$PROMPT"` | Anthropic Claude |
 | gpt | `openai api chat.completions.create -m gpt-4o -g user "$PROMPT"` | OpenAI GPT-4 |
 | ollama | `ollama run llama3.2 "$PROMPT"` | Local Ollama |
+| gemini | `gemini -p "$PROMPT"` | Google Gemini |
+| codex | `codex exec "$PROMPT"` | OpenAI Codex CLI |
+| zai | `npx @z_ai/coding-helper "$PROMPT"` | Z.ai GLM |
 
 ## Defaults
 
@@ -80,6 +89,32 @@ Consensus reached: Start with modular monolith, plan for microservices.
 - **Default MC**: auto
 - **Default Format**: auto
 - **Default Rounds**: auto
+```
+
+## Transcript Files
+
+모든 사이퍼는 `cyphers/` 디렉토리에 저장됩니다:
+
+```
+cyphers/
+├── 2026-02-06-12-30-monolith-vs-microservices.json  # 데이터 (기계용)
+├── 2026-02-06-12-30-monolith-vs-microservices.md    # 문서 (사람용)
+├── 2026-02-05-15-45-rest-vs-graphql.json
+└── 2026-02-05-15-45-rest-vs-graphql.md
+```
+
+**JSON 파일**: 구조화된 데이터, 검색/분석용
+**Markdown 파일**: 읽기 쉬운 포맷, frontmatter 포함
+
+```bash
+# 사이퍼 기록 보기
+/cypher:list
+
+# 최근 사이퍼 마크다운으로 내보내기
+/cypher:list --export latest
+
+# 직접 파일 열기
+cat cyphers/2026-02-06-12-30-monolith-vs-microservices.md
 ```
 
 ## Terminology
@@ -101,7 +136,9 @@ ai-cypher/
 │   ├── cypher-host.md      # MC - 토론 진행자
 │   └── flow-coordinator.md # 모델 호출 담당
 ├── commands/
+│   ├── cypher:setup.md     # 최초 설정 마법사
 │   ├── cypher:start.md     # 사이퍼 시작
+│   ├── cypher:list.md      # 기록 조회 및 내보내기
 │   └── cypher:config.md    # 설정 관리
 ├── skills/
 │   └── cypher-strategy/    # 토론 전략 가이드
@@ -118,10 +155,12 @@ ai-cypher/
 
 - Claude Code CLI
 - 최소 1개 이상의 AI 모델 접근 가능:
-  - Claude CLI (`claude`)
-  - OpenAI CLI (`openai`) + API key
-  - Ollama (`ollama`) 로컬 서버
-  - Gemini API key
+  - Claude CLI (`claude`) - 이미 설치됨
+  - OpenAI CLI (`openai`) + `OPENAI_API_KEY`
+  - Ollama (`ollama serve`) 로컬 서버
+  - Gemini CLI (`gemini`) + `GOOGLE_API_KEY`
+  - Codex CLI (`npm i -g @openai/codex`) + `OPENAI_API_KEY`
+  - Z.ai (`npx @z_ai/coding-helper`) - 구독 필요
 
 ## License
 
